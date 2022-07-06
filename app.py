@@ -41,3 +41,9 @@ class BookHandler:
 
     def delete(self, req, res):
         res.text = "DELETE:// Endpoint to delete book"
+
+
+def sample(req, res):
+    res.text = "Hello From Sample page"
+
+app.add_route("/sample", sample)

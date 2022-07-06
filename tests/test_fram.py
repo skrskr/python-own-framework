@@ -68,3 +68,15 @@ def test_class_based_handler_method_not_allowed(api,client, base_url):
 
     with pytest.raises(AttributeError):
         client.get(base_url + "/test")
+
+
+def test_alternative_route(api, client, base_url):
+    RESPONSE_TEXT = "TEXT"
+
+    def handler(req, res):
+        res.text = RESPONSE_TEXT
+
+    api.add_route("/test", handler)
+    response = client.get(base_url + "/test")
+    assert response.text == RESPONSE_TEXT
+    

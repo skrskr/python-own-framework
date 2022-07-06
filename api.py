@@ -20,6 +20,9 @@ class API:
         session.mount(prefix=base_url, adapter=RequestsWISGIAdapter(self))
         return session
 
+    def add_route(self, path, handler):
+        assert path not in self.routes, f"Route {path} already exists"
+        self.routes[path] = handler
     
     def route(self, path):
         assert path not in self.routes, f"Route {path} already exists"
