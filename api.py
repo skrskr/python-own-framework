@@ -1,14 +1,21 @@
 from parse import parse
 from webob import Request, Response
-import inspect
 from requests import Session as RequestSession
 from wsgiadapter import WSGIAdapter as RequestsWISGIAdapter
+from jinja2 import Environment, FileSystemLoader
+
+import inspect
+import os
 
 
 class API:
 
-    def __init__(self):
+    def __init__(self, template_dir="templates"):
         self.routes = {}
+
+        self.template_env = Environment(
+            loader=FileSystemLoader(os.path.abspath(template_dir))
+        )
 
     def __call__(self, environ, start_response):
         request = Request(environ)
@@ -56,3 +63,9 @@ class API:
         else:
             self.default_response(response)
         return response
+
+    def template(self, template_name, context):
+        if context is None:
+            context = {}
+        
+        return self.template_env.get_template(template_name).render(**context)

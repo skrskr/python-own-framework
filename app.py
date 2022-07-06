@@ -47,3 +47,7 @@ def sample(req, res):
     res.text = "Hello From Sample page"
 
 app.add_route("/sample", sample)
+
+@app.route("/html")
+def html(request, response):
+    response.body = app.template("index.html", {"title": "Aswone Frameworke", "name":"Nanjia Framework"}).encode("utf-8")
