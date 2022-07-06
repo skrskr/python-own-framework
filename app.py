@@ -26,3 +26,18 @@ def say_hello(request, response, name):
 def sum(request, response, num_1, num_2):
     total = int(num_1) + int(num_2)
     response.text = f"{num_1} + {num_2} = {total}"
+
+
+@app.route("/books")
+class BookHandler:
+    def get(self, req, res):
+        res.text = "GET:// Hello From Books page"
+
+    def post(self, req, res):
+        res.text = "POST:// Endpoint to create new book"
+    
+    def put(self, req, res):
+        res.text = "PUT:// Endpoint to update book"
+
+    def delete(self, req, res):
+        res.text = "DELETE:// Endpoint to delete book"
