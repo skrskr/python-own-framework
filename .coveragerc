@@ -1,0 +1,2 @@
+[run]
+omit = env/*,tests/*,app.py,wsgi_demo.py,dec.py
