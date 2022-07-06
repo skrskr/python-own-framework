@@ -8,6 +8,9 @@ def home(request, response):
     response.text = "Hello From HOME page"
 
 
+# @app.route("/home")
+# def home2(request, response):
+#     response.text = "Hello From HOME page"
 
 @app.route("/about")
 def about(request, response):
