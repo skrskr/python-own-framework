@@ -1,4 +1,5 @@
 from api import API
+from middleware import Middleware
 
 app = API()
 
@@ -63,3 +64,15 @@ def html(request, response):
 @app.route("/exception")
 def exception_throwing_handler(request, response):
     raise AssertionError("This handler should not be used.")
+
+
+# custom middleware
+class SimpleCustomMiddleware(Middleware):
+    def process_request(self, request):
+        print(f"processing request {request.url}")
+
+    def process_response(self, request, response):
+        print(f"processing response {request.url}")
+
+
+app.add_middleware(SimpleCustomMiddleware)
