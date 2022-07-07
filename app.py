@@ -11,7 +11,7 @@ app.add_exception_handler(custom_exception_handler)
 
 #  Routes
 
-@app.route("/home")
+@app.route("/home", allowed_methods=["get"])
 def home(request, response):
     response.text = "Hello From HOME page"
 
