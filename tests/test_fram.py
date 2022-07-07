@@ -183,3 +183,52 @@ def test_allowed_methods_for_function_based_handlers(api, client, base_url):
 
     response = client.post(f"{base_url}/test")
     assert response.text == "TEXT"
+
+
+# test Custom Response class
+
+def test_json_response_helper(api, client, base_url):
+
+    @api.route("/json")
+    def json_handler(req, res):
+        res.json = {"name":"John"}
+    
+    response = client.get(base_url + "/json")
+    json_body = response.json()
+    assert response.headers["content-type"] == "application/json"
+    assert json_body["name"] == "John"
+
+
+def test_html_response_helper(api, client, base_url):
+    @api.route("/html")
+    def html_helper(req, res):
+        res.html = api.template("index.html", context={
+            "title":"Some Title",
+            "name":"Some Name"
+        })
+
+    response = client.get(base_url + "/html")
+    assert response.headers["content-type"] == "text/html; charset=UTF-8"
+    assert "Some Title" in response.text
+    assert "Some Name" in response.text
+
+def test_text_response_helper(api, client, base_url):
+    @api.route("/text")
+    def text_helper(req, res):
+        res.text = "TEXT"
+
+    response = client.get(base_url + "/text")
+    assert response.headers["content-type"] == "text/plain; charset=UTF-8"
+    assert response.text == "TEXT"
+
+
+def test_mannualy_setting_body(api, client, base_url):
+    @api.route("/text")
+    def text_helper(req, res):
+        res.body = b"TEXT"
+        res.content_type = "text/plain"
+
+    
+    response = client.get(base_url + "/text")
+    assert response.headers["content-type"] == "text/plain; charset=UTF-8"
+    assert response.text == "TEXT"
