@@ -88,9 +88,23 @@ def test_template(api, client, base_url):
         res.body = api.template("index.html", context={
             "title":"Some Title",
             "name":"Some Name"
-        })
+        }).encode()
 
     response = client.get(base_url + "/html")
     assert "text/html" in response.headers["Content-Type"]
     assert "Some Title" in response.text
     assert "Some Name" in response.text
+
+
+def test_custom_exception_handler(api, client, base_url):
+    def on_exception(req, res, exc):
+        res.text = "AttributeErrorHappened"
+
+    api.add_exception_handler(on_exception)
+
+    @api.route("/test")
+    def test(req, res):
+        raise AttributeError()
+    
+    response = client.get(base_url + "/test")
+    assert response.text == "AttributeErrorHappened"

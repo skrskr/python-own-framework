@@ -2,6 +2,13 @@ from api import API
 
 app = API()
 
+def custom_exception_handler(request, response, exception_cls):
+    response.text = str(exception_cls)
+
+app.add_exception_handler(custom_exception_handler)
+
+
+#  Routes
 
 @app.route("/home")
 def home(request, response):
@@ -36,11 +43,11 @@ class BookHandler:
     def post(self, req, res):
         res.text = "POST:// Endpoint to create new book"
     
-    def put(self, req, res):
-        res.text = "PUT:// Endpoint to update book"
+    # def put(self, req, res):
+    #     res.text = "PUT:// Endpoint to update book"
 
-    def delete(self, req, res):
-        res.text = "DELETE:// Endpoint to delete book"
+    # def delete(self, req, res):
+    #     res.text = "DELETE:// Endpoint to delete book"
 
 
 def sample(req, res):
@@ -51,3 +58,8 @@ app.add_route("/sample", sample)
 @app.route("/html")
 def html(request, response):
     response.body = app.template("index.html", {"title": "Aswone Frameworke", "name":"Nanjia Framework"}).encode("utf-8")
+
+
+@app.route("/exception")
+def exception_throwing_handler(request, response):
+    raise AssertionError("This handler should not be used.")
