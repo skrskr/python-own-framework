@@ -1,6 +1,7 @@
 from parse import parse
 from webob import Request, Response
 from requests import Session as RequestSession
+from whitenoise import WhiteNoise
 from wsgiadapter import WSGIAdapter as RequestsWISGIAdapter
 from jinja2 import Environment, FileSystemLoader
 
@@ -10,15 +11,21 @@ import os
 
 class API:
 
-    def __init__(self, template_dir="templates"):
+    def __init__(self, template_dir="templates", static_dir="static"):
         self.routes = {}
 
         self.template_env = Environment(
             loader=FileSystemLoader(os.path.abspath(template_dir))
         )
         self.exception_handler = None
+        self.whitenoise = WhiteNoise(self.wsgi_app, root=static_dir)
+
 
     def __call__(self, environ, start_response):
+        return self.whitenoise(environ, start_response)
+
+
+    def wsgi_app(self, environ, start_response):
         request = Request(environ)
         response = self.handle_request(request)
         return response(environ, start_response)
