@@ -19,7 +19,7 @@ pip install bumbov
 ### Basic usage:
 
 ```python
-from bumbo.api import API
+from bumbov.api import API
 
 app = API()
 
@@ -46,13 +46,13 @@ class BooksResource:
 @app.route("/template")
 def template_handler(req, resp):
     resp.body = app.template(
-        "index.html", context={"name": "Bumbo", "title": "Best Framework"}).encode()
+        "index.html", context={"name": "Bumbov", "title": "Best Framework"}).encode()
 ```
 
 ### Unit Tests
 
 The recommended way of writing unit tests is with [pytest](https://docs.pytest.org/en/latest/). There are two built in fixtures
-that you may want to use when writing unit tests with Bumbo. The first one is `app` which is an instance of the main `API` class:
+that you may want to use when writing unit tests with Bumbov. The first one is `app` which is an instance of the main `API` class:
 
 ```python
 def test_route_overlap_throws_exception(app):
@@ -124,12 +124,12 @@ Then you can use the files inside this folder in HTML files:
 
 ### Middleware
 
-You can create custom middleware classes by inheriting from the `bumbo.middleware.Middleware` class and overriding its two methods
+You can create custom middleware classes by inheriting from the `bumbov.middleware.Middleware` class and overriding its two methods
 that are called before and after each request:
 
 ```python
-from bumbo.api import API
-from bumbo.middleware import Middleware
+from bumbov.api import API
+from bumbov.middleware import Middleware
 
 
 app = API()
