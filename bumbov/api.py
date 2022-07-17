@@ -101,7 +101,7 @@ class API:
         
         return response
 
-    def template(self, template_name, context):
+    def template(self, template_name, context=None):
         if context is None:
             context = {}
         
