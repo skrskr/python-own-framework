@@ -1,6 +1,6 @@
 import pytest
-from api import API
-from middleware import Middleware
+from bumbov.api import API
+from bumbov.middleware import Middleware
 
 
 FILE_DIR="css"
