@@ -136,3 +136,19 @@ def test_get_all_books(db, Author, Book):
 
     assert len(books) == 2
     assert books[1].author.name == "jack Doe"
+
+
+def test_update_author(db, Author):
+    db.create(Author)
+
+    john = Author(name="John Doe", age=23)
+    db.save(john)
+
+    john.name = "John Doe2"
+    john.age = 42
+    db.update(john)
+
+    john_from_db = db.get(Author, id=1)
+
+    assert john_from_db.name == "John Doe2"
+    assert john_from_db.age == 42

@@ -17,8 +17,6 @@ class Database:
 
     def save(self, instance):
         sql, values = instance._get_insert_sql()
-        print(sql)
-        print(values)
         cursor = self.conn.execute(sql, values)
         instance._data["id"] = cursor.lastrowid
         self.conn.commit()
@@ -54,6 +52,14 @@ class Database:
             setattr(instance, field, value)
         
         return instance
+
+    
+    def update(self, instance):
+        sql, values = instance._get_update_sql()
+        print("sql")
+        print(sql)
+        self.conn.execute(sql, values)
+        self.conn.commit()
 
 
 class Table:
@@ -150,6 +156,25 @@ class Table:
         sql = SELECT_WHERE_SQL.format(fields=", ".join(fields), name=name)
         params = [id]
         return sql, fields, params
+
+    def _get_update_sql(self):
+
+        UPDATE_SQL = "UPDATE {name} SET {fields} WHERE id = ?;"
+        cls = self.__class__
+
+        fields = []
+        values = []
+        for name, field in inspect.getmembers(cls):
+            if isinstance(field, Column):
+                fields.append(f"{name} = ?")
+                values.append(getattr(self, name))
+            elif isinstance(field, ForeignKey):
+                fields.append(f"{name}_id = ?")
+                values.append(getattr(self, name).id)
+
+        values.append(getattr(self, 'id'))
+        sql = UPDATE_SQL.format(name=cls.__name__.lower(), fields=', '.join(fields))
+        return sql, values
 
 
 class Column:
