@@ -57,4 +57,23 @@ def test_save_author_instance(db, Author):
     db.save(author3)
 
     assert author3.id is 3
+
+
+def test_query_all_authors(db, Author):
+    db.create(Author)
+
+    john = Author(name="John Doe", age=23)
+    vik = Author(name="Vik Star", age=43)
+    db.save(john)
+    db.save(vik)
     
+    authors = db.all(Author)
+
+    assert Author._get_select_all_sql() == (
+        "SELECT id, age, name FROM author;",
+        ["id", "age", "name"]
+    )
+    assert len(authors) == 2
+    assert type(authors[0]) == Author
+    assert {a.age for a in authors} == {23, 43}
+    assert {a.name for a in authors} == {"John Doe", "Vik Star"}
