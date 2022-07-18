@@ -30,6 +30,10 @@ class Database:
         for row in rows:
             instance = table()
             for field, value in zip(fields, row):
+                if field.endswith("_id"):
+                    field = field[:-3]
+                    fk = getattr(table, field)
+                    value = self.get(fk.table, id=value)
                 setattr(instance, field, value)
             result.append(instance)
         
@@ -43,6 +47,10 @@ class Database:
 
         instance = table()
         for field, value in zip(fields, row):
+            if field.endswith("_id"):
+                field = field[:-3]
+                fk = getattr(table, field)
+                value = self.get(fk.table, id=value)
             setattr(instance, field, value)
         
         return instance
