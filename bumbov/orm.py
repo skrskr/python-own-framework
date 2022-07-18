@@ -56,9 +56,12 @@ class Database:
     
     def update(self, instance):
         sql, values = instance._get_update_sql()
-        print("sql")
-        print(sql)
         self.conn.execute(sql, values)
+        self.conn.commit()
+
+    def delete(self, instance, id):
+        sql, params = instance._get_delete_sql(id)
+        self.conn.execute(sql, params)
         self.conn.commit()
 
 
@@ -175,6 +178,13 @@ class Table:
         values.append(getattr(self, 'id'))
         sql = UPDATE_SQL.format(name=cls.__name__.lower(), fields=', '.join(fields))
         return sql, values
+
+    @classmethod
+    def _get_delete_sql(cls, id):
+        DELETE_SQL = "DELETE FROM {name} WHERE id = ?;"
+        sql = DELETE_SQL.format(name=cls.__name__.lower())
+        params = [id]
+        return sql, params
 
 
 class Column:
